@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>title</title>
+    <!--[if IE]>
+      <meta http-equiv="X-UA-Compatible" content="IE = edge"
+    /><![endif]-->
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="css/style.min.css" />
+  </head>
+
+  <body>
+    <div class="wrapper">
+      @@include('_html/_header.html')
+      <div class="content">
+        <span>Heart icon</span>
+        @@include('_html/_icon.html', { "class": "heart" })
+      </div>
+      @@include('_html/_footer.html')
+    </div>
+    <!--script(src="static/js/vendor/jquery-3.3.1.min.js")-->
+    <script src="js/libs.js"></script>
+    <script src="js/script.min.js"></script>
+  </body>
+</html>
