@@ -2,8 +2,7 @@ const pathModule = require('path');
 
 // Change the name of the theme folder, local url and remote url
 let project_folder = '../test';
-let siteUrl = 'http://testtemplate.local/';
-let remoteUrl = 'www.example.com';
+let siteUrl = 'http://raduc.sgedu.site/';
 
 let theme_assets_folder = pathModule.join(project_folder, '/assets');
 let source_folder = pathModule.join(project_folder, '/#src');
@@ -32,6 +31,7 @@ let path = {
     // html: source_folder + '/**/*.html',
     php: project_folder + '/**/*.php',
     css: source_folder + '/_scss/**/*.scss',
+    projBuild: project_folder + '/**/*',
     js: source_folder + '/_js/**/*.js',
     img: source_folder + '/_img/**/*.{jpg,png,svg,gif,ico,webp}',
   },
@@ -56,8 +56,8 @@ let { src, dest } = require('gulp'),
   ttf2woff = require('gulp-ttf2woff'),
   ttf2woff2 = require('gulp-ttf2woff2'),
   uglify = require('gulp-uglify-es').default,
-  concat = require('gulp-concat');
-fonter = require('gulp-fonter');
+  concat = require('gulp-concat'),
+  fonter = require('gulp-fonter');
 
 function browserSync(params) {
   browsersync.init({
@@ -83,49 +83,53 @@ function php() {
 }
 
 function css() {
-  return src(path.src.css)
-    .pipe(
-      scss({
-        outputStyle: 'expanded',
-      })
-    )
-    .pipe(group_media())
-    .pipe(
-      autoprefixer({
-        overrideBrowserslist: ['last 5 versions'],
-        cascade: true,
-      })
-    )
-    .pipe(dest(path.build.css))
-    .pipe(browsersync.stream())
-    .pipe(clean_css())
-    .pipe(
-      rename({
-        extname: '.min.css',
-      })
-    )
-    .pipe(dest(path.build.css))
-    .pipe(browsersync.stream());
+  return (
+    src(path.src.css)
+      .pipe(
+        scss({
+          outputStyle: 'expanded',
+        })
+      )
+      .pipe(group_media())
+      .pipe(
+        autoprefixer({
+          overrideBrowserslist: ['last 5 versions'],
+          cascade: true,
+        })
+      )
+      .pipe(dest(path.build.css))
+      // .pipe(browsersync.stream())
+      .pipe(clean_css())
+      .pipe(
+        rename({
+          extname: '.min.css',
+        })
+      )
+      .pipe(dest(path.build.css))
+  );
+  // .pipe(browsersync.stream());
 }
 
 function js() {
-  return src(path.src.js)
-    .pipe(fileinclude())
-    .pipe(
-      babel({
-        presets: ['@babel/env'],
-      })
-    )
-    .pipe(dest(path.build.js))
-    .pipe(browsersync.stream())
-    .pipe(uglify())
-    .pipe(
-      rename({
-        extname: '.min.js',
-      })
-    )
-    .pipe(dest(path.build.js))
-    .pipe(browsersync.stream());
+  return (
+    src(path.src.js)
+      .pipe(fileinclude())
+      .pipe(
+        babel({
+          presets: ['@babel/env'],
+        })
+      )
+      .pipe(dest(path.build.js))
+      // .pipe(browsersync.stream())
+      .pipe(uglify())
+      .pipe(
+        rename({
+          extname: '.min.js',
+        })
+      )
+      .pipe(dest(path.build.js))
+  );
+  // .pipe(browsersync.stream());
 }
 
 function vendors(cb) {
@@ -233,10 +237,16 @@ function watchFiles() {
   gulp.watch([path.watch.css], css);
   gulp.watch([path.watch.js], js);
   gulp.watch([path.watch.img], images);
+
+  gulp.watch([path.watch.projBuild], buildReload);
 }
 
 function clean() {
   return del(path.clean, { force: true });
+}
+
+function buildReload() {
+  return src(path.build.css).pipe(browsersync.stream());
 }
 
 let build = gulp.series(

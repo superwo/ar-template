@@ -32,7 +32,7 @@
     "gulp-uglify-es": "^2.0.0"
   },
   "dependencies": {
-    "svg4everybody": "^2.1.9",
-    "normalize.css": "^8.0.1"
+    "normalize.css": "^8.0.1",
+    "svg4everybody": "^2.1.9"
   }
 }
